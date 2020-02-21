@@ -5,7 +5,7 @@ March 4<sup>th</sup> & <sup>5th</sup> 2020 @ Ritz-Carlton Bacara in Santa Barbar
 ## Session Files
 
 - March 4<sup>th</sup>
-  - 9:00 AM : [Hands-On - Automate Cloud Enablement with Templates](./Hands-On---Automate-Cloud-Enablement-with-Templates)
+  - 9:00 AM : [Hands-On - Automate Cloud Enablement with Templates](./Hands-On_-_Automate_Cloud_Enablement_with_Templates)
   - 1:00 PM : [Hands-On - Use and Customize Policies to Automate Cloud Governance](./Hands-On_-_Automate_Cloud_Enablement_with_Templates)
 
 ## Cloud Management Platform Access

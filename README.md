@@ -1,4 +1,4 @@
-# Flexera Cloud Summit 2020
+# [Flexera Cloud Summit 2020](https://bit.ly/32kCyDA)
 
 March 4<sup>th</sup> & <sup>5th</sup> 2020 @ Ritz-Carlton Bacara in Santa Barbara, CA
 
@@ -10,9 +10,9 @@ March 4<sup>th</sup> & <sup>5th</sup> 2020 @ Ritz-Carlton Bacara in Santa Barbar
 
 ## Cloud Management Platform Access
 
-URL: [https://login.rightscale.com]()  
+URL: https://login.rightscale.com  
 Username: cloud-summit-2020@flexera.com  
-Password: See presenter
+Password: see presenter  
 
 ## Helpful Links
 

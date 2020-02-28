@@ -484,7 +484,7 @@ define update_rds_license($data) return $all_responses do
             "Version": "2014-10-31",
             "DBInstanceIdentifier": $item["dbInstanceIdentifier"],
             # Remove comment below to apply update immediately v. during maintenance window
-            "ApplyImmediately": true,
+            # "ApplyImmediately": true,
             "LicenseModel": "bring-your-own-license"
           }
         )

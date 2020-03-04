@@ -1,6 +1,6 @@
-name "Multi Cloud Account Creator"
+name "Multi Cloud Account Creator - Final - <USER>"
 rs_ca_ver 20161221
-short_description "Creates a Cloud Tenant in AWS or Azure, connects it to a CMP Account, and establishes corporate goverance configurations."
+short_description "Creates a Cloud Tenant in AWS, Azure, or GCP, connects it to a CMP Account, and establishes corporate goverance configurations."
 import "sys_log"
 
 ##############
@@ -28,7 +28,7 @@ end
 
 # What Business Unit?
 parameter "param_ou_lob_parent" do
-  label "Line Of Business Parent OU"
+  label "Business Unit"
   type "string"
   category "Cloud"
   min_length 2
@@ -160,10 +160,10 @@ define launch($param_account_name, $param_email, $param_ou_lob_parent, $param_pr
   $account_id = ""
 
   ## Outputs
-  $o_vpc_id = "Unknown"
-  $o_subnet_ids = "Unknown"
-  $o_account_id = "Unknown"
-  $o_temp_passwd = "Unknown"
+  $o_vpc_id = ""
+  $o_subnet_ids = ""
+  $o_account_id = ""
+  $o_temp_passwd = ""
 
   # User
   $default_company_name = "ABC Corp."
@@ -246,24 +246,26 @@ define launch($param_account_name, $param_email, $param_ou_lob_parent, $param_pr
           end
         end
 
-        # Assume Default Cross Account Role
-        $cross_account_role_arn = "arn:aws:iam::"+$aws_account_id+":role/OrganizationAccountAccessRole"
-        call aws_assume_role($cross_account_role_arn, "create-account-cat") retrieve $cross_account_role_response
-        $assumed_role_access_key = $cross_account_role_response["body"]["AssumeRoleResponse"]["AssumeRoleResult"]["Credentials"]["AccessKeyId"]
-        $assumed_role_secret_access_key = $cross_account_role_response["body"]["AssumeRoleResponse"]["AssumeRoleResult"]["Credentials"]["SecretAccessKey"]
-        $assumed_role_session = $cross_account_role_response["body"]["AssumeRoleResponse"]["AssumeRoleResult"]["Credentials"]["SessionToken"]
+        sub task_label:"Creating CMP User in New Account" do
+          # Assume Default Cross Account Role
+          $cross_account_role_arn = "arn:aws:iam::"+$aws_account_id+":role/OrganizationAccountAccessRole"
+          call aws_assume_role($cross_account_role_arn, "create-account-cat") retrieve $cross_account_role_response
+          $assumed_role_access_key = $cross_account_role_response["body"]["AssumeRoleResponse"]["AssumeRoleResult"]["Credentials"]["AccessKeyId"]
+          $assumed_role_secret_access_key = $cross_account_role_response["body"]["AssumeRoleResponse"]["AssumeRoleResult"]["Credentials"]["SecretAccessKey"]
+          $assumed_role_session = $cross_account_role_response["body"]["AssumeRoleResponse"]["AssumeRoleResult"]["Credentials"]["SessionToken"]
 
-        # Create IAM User in new Account
-        $iam_user_name = "flexera_cmp"
-        call aws_create_iam_user($iam_user_name, $assumed_role_access_key, $assumed_role_secret_access_key, $assumed_role_session) retrieve $create_iam_user_response
+          # Create IAM User in new Account
+          $iam_user_name = "flexera_cmp"
+          call aws_create_iam_user($iam_user_name, $assumed_role_access_key, $assumed_role_secret_access_key, $assumed_role_session) retrieve $create_iam_user_response
 
-        # Attach Admin Policy to IAM User
-        call aws_attach_user_policy("arn:aws:iam::aws:policy/AdministratorAccess", $iam_user_name, $assumed_role_access_key, $assumed_role_secret_access_key, $assumed_role_session) retrieve $attach_user_policy_response
+          # Attach Admin Policy to IAM User
+          call aws_attach_user_policy("arn:aws:iam::aws:policy/AdministratorAccess", $iam_user_name, $assumed_role_access_key, $assumed_role_secret_access_key, $assumed_role_session) retrieve $attach_user_policy_response
 
-        # Create Access Key for newly created IAM User
-        call aws_create_access_key($iam_user_name, $assumed_role_access_key, $assumed_role_secret_access_key, $assumed_role_session) retrieve $iam_user_access_key_response
-        $iam_access_key = $iam_user_access_key_response["body"]["CreateAccessKeyResponse"]["CreateAccessKeyResult"]["AccessKey"]["AccessKeyId"]
-        $iam_secret_access_key = $iam_user_access_key_response["body"]["CreateAccessKeyResponse"]["CreateAccessKeyResult"]["AccessKey"]["SecretAccessKey"]
+          # Create Access Key for newly created IAM User
+          call aws_create_access_key($iam_user_name, $assumed_role_access_key, $assumed_role_secret_access_key, $assumed_role_session) retrieve $iam_user_access_key_response
+          $iam_access_key = $iam_user_access_key_response["body"]["CreateAccessKeyResponse"]["CreateAccessKeyResult"]["AccessKey"]["AccessKeyId"]
+          $iam_secret_access_key = $iam_user_access_key_response["body"]["CreateAccessKeyResponse"]["CreateAccessKeyResult"]["AccessKey"]["SecretAccessKey"]
+        end
 
         $account_id = $aws_account_id
         $network_region = $aws_network_region
@@ -299,7 +301,7 @@ define launch($param_account_name, $param_email, $param_ou_lob_parent, $param_pr
         call cmp_create_child_acct($param_account_name, $shard, $rs_access_token, $cmp_master_account_id) retrieve $child_account_href
         $child_account_id = split($child_account_href, "/")[3]
 
-        # Connect Cloud Account to CMP Accouont
+        # Connect Cloud Account to CMP Account
         if $param_provider == "AWS"
 
           $cloud_ids = map($map_cloud_accounts, $param_provider, "clouds")

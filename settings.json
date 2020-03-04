@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-      "*.rb": "ruby",
-      "*.cat": "ruby",
-      "*.pt": "ruby",
-      "*.plugin": "ruby",
-      "*.package": "ruby"
-    }
-  }

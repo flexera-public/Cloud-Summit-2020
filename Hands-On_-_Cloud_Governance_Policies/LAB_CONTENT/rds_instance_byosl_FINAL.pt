@@ -42,26 +42,26 @@ end
 ###############################################################################
 
 #authenticate with AWS
-# credentials "auth_aws" do
-#   schemes "aws","aws_sts"
-#   label "AWS"
-#   description "Select the AWS Credential from the list."
-#   tags "provider=aws"
+credentials "auth_aws" do
+  schemes "aws","aws_sts"
+  label "AWS"
+  description "Select the AWS Credential from the list."
+  tags "provider=aws"
+end
+
+# auth "auth_aws", type: "aws" do
+#   version 4
+#   service "rds"
+#   access_key cred('AWS_ACCESS_KEY_ID')
+#   secret_key cred('AWS_SECRET_ACCESS_KEY')
 # end
 
-auth "auth_aws", type: "aws" do
-  version 4
-  service "rds"
-  access_key cred('AWS_ACCESS_KEY_ID')
-  secret_key cred('AWS_SECRET_ACCESS_KEY')
-end
-
-auth "monitoring_auth_aws", type: "aws" do
-  version 4
-  service "monitoring"
-  access_key cred('AWS_ACCESS_KEY_ID')
-  secret_key cred('AWS_SECRET_ACCESS_KEY')
-end
+# auth "monitoring_auth_aws", type: "aws" do
+#   version 4
+#   service "monitoring"
+#   access_key cred('AWS_ACCESS_KEY_ID')
+#   secret_key cred('AWS_SECRET_ACCESS_KEY')
+# end
 
 ###############################################################################
 # Datasources
@@ -284,8 +284,8 @@ script "js_cloudwatch_cpu_mem_usage", type: "javascript" do
   var start_date = new Date(start_date_tmp).toISOString()
 
   results = {
-    //"auth": "auth_aws",
-    "auth": "monitoring_auth_aws"
+    "auth": "auth_aws",
+    //"auth": "monitoring_auth_aws"
     "host": 'monitoring.'+region+'.amazonaws.com',
     "verb": "GET",
     "path": "/",

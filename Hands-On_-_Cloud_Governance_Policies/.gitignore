@@ -1,0 +1,9 @@
+dist/
+.DS_Store
+.vscode/
+*.log
+**/*.json
+*.js
+node_modules/
+*.txt
+**/*.out

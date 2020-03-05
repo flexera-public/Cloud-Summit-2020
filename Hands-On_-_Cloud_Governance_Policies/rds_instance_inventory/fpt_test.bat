@@ -1,1 +1,1 @@
-%USERPROFILE%\Desktop\fpt\fpt %1 %2 param_email="" --credentials="auth_aws=Professional_Services_RDS_Read-Write" 1> fpt.out 2>&1
+%USERPROFILE%\Desktop\fpt\fpt %1 %2 param_email="" --credentials="auth_aws=Professional_Services_RDS_Read-Write"
